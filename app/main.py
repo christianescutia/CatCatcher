@@ -1,97 +1,247 @@
-# import all the relevant classes
-from kivy.app import App
-from kivy.uix.widget import Widget
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty
+
+# To run code make sure to have kivy add kivymd installed via pip or follow the links below to download and or documentation
+# https://kivymd.readthedocs.io/en/latest/getting-started/
+# https://kivy.org/doc/stable/gettingstarted/installation.html
+
+from kivymd.app import MDApp
+from kivymd.uix.button import MDRectangleFlatButton
 from kivy.lang import Builder
-from kivy.uix.popup import Popup
-from kivy.uix.floatlayout import FloatLayout
-import pandas as pd
+from kivy.uix.screenmanager import ScreenManager, Screen
 
-# class to call the popup function
-class PopupWindow(Widget):
-	def btn(self):
-		popFun()
+screen_helper = """
 
-# class to build GUI for a popup window
-class P(FloatLayout):
-	pass
+ScreenManager:
+    HomeScreen:
+    LoginScreen:
+    RegisterScreen:
+    InfoScreen:
 
-# function that displays the content
-def popFun():
-	show = P()
-	window = Popup(title = "popup", content = show,
-				size_hint = (None, None), size = (300, 300))
-	window.open()
+<HomeScreen>:
+    name: "home_screen"
+    MDCard:
+        size_hint: None, None
+        size: 600, 800
+        pos_hint: { "center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 50
+        spacing: 50
+        orientation: "vertical"
 
-# class to accept user info and validate it
-class loginWindow(Screen):
-	email = ObjectProperty(None)
-	pwd = ObjectProperty(None)
-	def validate(self):
+        MDIcon:
+            id: app_icon
+            icon: "cat"
+            font_size: 140
+            padding_x: 175
+    
+        MDLabel:
+            id: welcome_label
+            text: "Welcome to Cat Catcher"
+            font_size: 80
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 20
 
-		# validating if the email already exists
-		if self.email.text not in users['Email'].unique():
-			popFun()
-		else:
+        MDRoundFlatButton:
+            text: 'Login'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.manager.current = 'login_screen'
 
-			# switching the current screen to display validation result
-			sm.current = 'logdata'
+        MDRoundFlatButton:
+            text: 'Register'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.manager.current = 'register_screen'
+        
+        MDRoundFlatButton:
+            text: 'Info'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.manager.current = 'info_screen'
 
-			# reset TextInput widget
-			self.email.text = ""
-			self.pwd.text = ""
+<LoginScreen>:
+    name: "login_screen"
+    MDCard:
+        size_hint: None, None
+        size: 600, 800
+        pos_hint: { "center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 50
+        spacing: 50
+        orientation: "vertical"
+
+        MDIcon:
+            id: app_icon
+            icon: "cat"
+            font_size: 140
+            padding_x: 175
+    
+        MDLabel:
+            id: welcome_label
+            text: "Login"
+            font_size: 80
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 20
+    
+        MDTextFieldRound:
+            id: user
+            hint_text: "username"
+            icon_right: "account"
+            size_hint_x: None
+            width: 400
+            font_size: 32
+            pos_hint: { "center_x": 0.5 }
+
+        MDTextFieldRound:
+            id: password
+            hint_text: "password"
+            icon_right: "eye-off"
+            size_hint_x: None
+            width: 400
+            font_size: 32
+            pos_hint: { "center_x": 0.5 }
+            password: True
+
+        MDRoundFlatButton:
+            text: 'Login'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+        
+        MDRoundFlatButton:
+            text: 'Clear'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+        
+        MDRoundFlatButton:
+            text: 'Back'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.manager.current = 'home_screen'
+
+<RegisterScreen>:
+    name: "register_screen"
+    MDCard:
+        size_hint: None, None
+        size: 600, 800
+        pos_hint: { "center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 50
+        spacing: 50
+        orientation: "vertical"
+
+        MDIcon:
+            id: app_icon
+            icon: "cat"
+            font_size: 140
+            padding_x: 175
+    
+        MDLabel:
+            id: welcome_label
+            text: "Register"
+            font_size: 80
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 20
+    
+        MDTextFieldRound:
+            id: user
+            hint_text: "username"
+            icon_right: "account"
+            size_hint_x: None
+            width: 400
+            font_size: 32
+            pos_hint: { "center_x": 0.5 }
+
+        MDTextFieldRound:
+            id: password
+            hint_text: "password"
+            icon_right: "eye-off"
+            size_hint_x: None
+            width: 400
+            font_size: 32
+            pos_hint: { "center_x": 0.5 }
+            password: True
+        
+        MDTextFieldRound:
+            id: password_confirm
+            hint_text: "password"
+            icon_right: "eye-off"
+            size_hint_x: None
+            width: 400
+            font_size: 32
+            pos_hint: { "center_x": 0.5 }
+            password: True
+
+        MDRoundFlatButton:
+            text: 'Register'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+        
+        MDRoundFlatButton:
+            text: 'Clear'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+        
+        MDRoundFlatButton:
+            text: 'Back'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.manager.current = 'home_screen'
+
+<InfoScreen>:
+    name: "info_screen"
+    MDCard:
+        size_hint: None, None
+        size: 600, 800
+        pos_hint: { "center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 50
+        spacing: 50
+        orientation: "vertical"
+
+        MDIcon:
+            id: app_icon
+            icon: "cat"
+            font_size: 140
+            padding_x: 175
+        
+        MDRoundFlatButton:
+            text: 'Home'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.manager.current = 'home_screen'
+"""
+
+class HomeScreen(Screen):
+    def login(self):
+        print("Login Button Pressed...")
+        pass
+
+class LoginScreen(Screen):
+    pass
+
+class RegisterScreen(Screen):
+    pass
+
+class InfoScreen(Screen):
+    pass
+
+# Screen Manager
+sm = ScreenManager()
+sm.add_widget( HomeScreen ( name = 'home_screen' ) )
+sm.add_widget( LoginScreen ( name = 'login_screen' ) )
+sm.add_widget( RegisterScreen ( name = 'register_screen' ) )
+sm.add_widget( InfoScreen ( name = 'info_screen' ) )
 
 
-# class to accept sign up info
-class signupWindow(Screen):
-	name2 = ObjectProperty(None)
-	email = ObjectProperty(None)
-	pwd = ObjectProperty(None)
-	def signupbtn(self):
+class CatCatcherApp(MDApp):
+    
+    def build(self):
+        screen = Builder.load_string(screen_helper)
+        return screen
 
-		# creating a DataFrame of the info
-		user = pd.DataFrame([[self.name2.text, self.email.text, self.pwd.text]],
-							columns = ['Name', 'Email', 'Password'])
-		if self.email.text != "":
-			if self.email.text not in users['Email'].unique():
-
-				# if email does not exist already then append to the csv file
-				# change current screen to log in the user now
-				user.to_csv('login.csv', mode = 'a', header = False, index = False)
-				sm.current = 'login'
-				self.name2.text = ""
-				self.email.text = ""
-				self.pwd.text = ""
-		else:
-			# if values are empty or invalid show pop up
-			popFun()
-	
-# class to display validation result
-class logDataWindow(Screen):
-	pass
-
-# class for managing screens
-class windowManager(ScreenManager):
-	pass
-
-# kv file
-kv = Builder.load_file('login.kv')
-sm = windowManager()
-
-# reading all the data stored
-users=pd.read_csv('login.csv')
-
-# adding screens
-sm.add_widget(loginWindow(name='login'))
-sm.add_widget(signupWindow(name='signup'))
-sm.add_widget(logDataWindow(name='logdata'))
-
-# class that builds gui
-class loginMain(App):
-	def build(self):
-		return sm
-
-# driver function
-if __name__=="__main__":
-	loginMain().run()
+CatCatcherApp().run()
