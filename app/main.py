@@ -7,6 +7,23 @@ from kivymd.app import MDApp
 from kivymd.uix.button import MDRectangleFlatButton
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
+import sqlite3
+
+class HomeScreen(Screen):
+    pass
+
+class LoginScreen(Screen):
+    pass
+
+class RegisterScreen(Screen):
+    
+    def register_user(self):
+        print('user registered better')
+        pass
+
+class InfoScreen(Screen):
+    pass
+
 
 screen_helper = """
 
@@ -180,6 +197,8 @@ ScreenManager:
             text: 'Register'
             font_size: 24
             pos_hint: { "center_x": 0.5 }
+            on_press: print('register button pressed...')
+            on_press: root.register_user()
         
         MDRoundFlatButton:
             text: 'Clear'
@@ -215,21 +234,6 @@ ScreenManager:
             pos_hint: { "center_x": 0.5 }
             on_press: root.manager.current = 'home_screen'
 """
-
-class HomeScreen(Screen):
-    def login(self):
-        print("Login Button Pressed...")
-        pass
-
-class LoginScreen(Screen):
-    pass
-
-class RegisterScreen(Screen):
-    pass
-
-class InfoScreen(Screen):
-    pass
-
 # Screen Manager
 sm = ScreenManager()
 sm.add_widget( HomeScreen ( name = 'home_screen' ) )
@@ -243,5 +247,9 @@ class CatCatcherApp(MDApp):
     def build(self):
         screen = Builder.load_string(screen_helper)
         return screen
+
+    def register_user(self):
+        print('user registered')
+        pass
 
 CatCatcherApp().run()
