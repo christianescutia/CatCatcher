@@ -8,53 +8,6 @@ from kivymd.uix.button import MDRectangleFlatButton
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 
-"""
-class LoginScreen(Screen):
-    def build(self):
-        self.theme_cls.theme_style = "Dark"
-        self.theme_cls.primary_pallete = "BlueGray"
-        return Builder.load_file('login.kv')
-
-    def logger(self):
-        print("Logged in Info: ")
-        print("username: " + self.root.ids.user.text)
-        print("password: " + self.root.ids.password.text)
-        print("password-confirm: " + self.root.ids.password_confirm.text)
-
-        # check if both passwords are the same
-        #if( self.root.ids.password.text == self.root.ids.password_confirm.text):
-            #print("password check passed...")
-        #else:
-            #print("password check failed...")
-        
-        # end of logger
-        pass
-
-    def clear(self):
-        #self.LoginApp.ids.user.text = ""
-        #self.LoginApp.ids.password.text = ""
-        pass
-
-class HomeScreen(Screen):
-    def build(self):
-        self.theme_cls.theme_style = "Dark"
-        self.theme_cls.primary_pallete = "BlueGray"
-        return Builder.load_file('home.kv')
-
-    def login(self):
-        print("Login Button Pressed...")
-        pass
-    
-    def register(self):
-        print("Register Button Pressed...")
-        pass
-    
-    def info(self):
-        print("Info Button Pressed...")
-        pass
-"""
-
-
 screen_helper = """
 
 ScreenManager:
@@ -264,7 +217,9 @@ ScreenManager:
 """
 
 class HomeScreen(Screen):
-    pass
+    def login(self):
+        print("Login Button Pressed...")
+        pass
 
 class LoginScreen(Screen):
     pass
