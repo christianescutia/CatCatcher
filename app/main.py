@@ -13,13 +13,27 @@ class HomeScreen(Screen):
     pass
 
 class LoginScreen(Screen):
-    pass
+    
+    def login(self):
+        print('logging in user...')
+
+    def clear(self):
+        print('clear data')
+        self.ids.user.text = ''
+        self.ids.password.text = ''
 
 class RegisterScreen(Screen):
     
     def register_user(self):
-        print('user registered better')
-        pass
+        print('user registered...')
+    
+    def clear(self):
+        print('clear data')
+        self.ids.user.text = ''
+        self.ids.email.text = ''
+        self.ids.phone_num.text = ''
+        self.ids.password.text = ''
+        self.ids.password_confirm.text = ''
 
 class InfoScreen(Screen):
     pass
@@ -85,7 +99,7 @@ ScreenManager:
         pos_hint: { "center_x": 0.5, "center_y": 0.5}
         elevation: 10
         padding: 50
-        spacing: 50
+        spacing: 30
         orientation: "vertical"
 
         MDIcon:
@@ -126,11 +140,13 @@ ScreenManager:
             text: 'Login'
             font_size: 24
             pos_hint: { "center_x": 0.5 }
+            on_press: root.login()
         
         MDRoundFlatButton:
             text: 'Clear'
             font_size: 24
             pos_hint: { "center_x": 0.5 }
+            on_press: root.clear()
         
         MDRoundFlatButton:
             text: 'Back'
@@ -174,6 +190,24 @@ ScreenManager:
             pos_hint: { "center_x": 0.5 }
 
         MDTextFieldRound:
+            id: email
+            hint_text: "email"
+            icon_right: "mail"
+            size_hint_x: None
+            width: 400
+            font_size: 32
+            pos_hint: { "center_x": 0.5 }
+
+        MDTextFieldRound:
+            id: phone_num
+            hint_text: "phone number"
+            icon_right: "phone"
+            size_hint_x: None
+            width: 400
+            font_size: 32
+            pos_hint: { "center_x": 0.5 }
+
+        MDTextFieldRound:
             id: password
             hint_text: "password"
             icon_right: "eye-off"
@@ -204,6 +238,7 @@ ScreenManager:
             text: 'Clear'
             font_size: 24
             pos_hint: { "center_x": 0.5 }
+            on_press: root.clear()
         
         MDRoundFlatButton:
             text: 'Back'
@@ -247,9 +282,5 @@ class CatCatcherApp(MDApp):
     def build(self):
         screen = Builder.load_string(screen_helper)
         return screen
-
-    def register_user(self):
-        print('user registered')
-        pass
 
 CatCatcherApp().run()
