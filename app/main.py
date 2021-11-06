@@ -161,15 +161,9 @@ ScreenManager:
         size: 600, 800
         pos_hint: { "center_x": 0.5, "center_y": 0.5}
         elevation: 10
-        padding: 50
-        spacing: 50
+        padding: 20
+        spacing: 20
         orientation: "vertical"
-
-        MDIcon:
-            id: app_icon
-            icon: "cat"
-            font_size: 140
-            padding_x: 175
     
         MDLabel:
             id: welcome_label
@@ -178,7 +172,6 @@ ScreenManager:
             halign: 'center'
             size_hint_y: None
             height: self.texture_size[1]
-            padding_y: 20
     
         MDTextFieldRound:
             id: user
@@ -215,7 +208,7 @@ ScreenManager:
             width: 400
             font_size: 32
             pos_hint: { "center_x": 0.5 }
-            password: True
+            password: False
         
         MDTextFieldRound:
             id: password_confirm
@@ -225,7 +218,7 @@ ScreenManager:
             width: 400
             font_size: 32
             pos_hint: { "center_x": 0.5 }
-            password: True
+            password: False
 
         MDRoundFlatButton:
             text: 'Register'
