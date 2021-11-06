@@ -1,0 +1,220 @@
+ScreenManager:
+    HomeScreen:
+    LoginScreen:
+    RegisterScreen:
+    InfoScreen:
+
+<HomeScreen>:
+    name: "home_screen"
+    MDCard:
+        size_hint: None, None
+        size: 600, 800
+        pos_hint: { "center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 50
+        spacing: 50
+        orientation: "vertical"
+
+        MDIcon:
+            id: app_icon
+            icon: "cat"
+            font_size: 140
+            padding_x: 175
+    
+        MDLabel:
+            id: welcome_label
+            text: "Welcome to Cat Catcher"
+            font_size: 80
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 20
+
+        MDRoundFlatButton:
+            text: 'Login'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.manager.current = 'login_screen'
+
+        MDRoundFlatButton:
+            text: 'Register'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.manager.current = 'register_screen'
+        
+        MDRoundFlatButton:
+            text: 'Info'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.manager.current = 'info_screen'
+
+<LoginScreen>:
+    name: "login_screen"
+    MDCard:
+        size_hint: None, None
+        size: 600, 800
+        pos_hint: { "center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 50
+        spacing: 30
+        orientation: "vertical"
+
+        MDIcon:
+            id: app_icon
+            icon: "cat"
+            font_size: 140
+            padding_x: 175
+    
+        MDLabel:
+            id: welcome_label
+            text: "Login"
+            font_size: 80
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 20
+    
+        MDTextFieldRound:
+            id: user
+            hint_text: "username"
+            icon_right: "account"
+            size_hint_x: None
+            width: 400
+            font_size: 32
+            pos_hint: { "center_x": 0.5 }
+
+        MDTextFieldRound:
+            id: password
+            hint_text: "password"
+            icon_right: "eye-off"
+            size_hint_x: None
+            width: 400
+            font_size: 32
+            pos_hint: { "center_x": 0.5 }
+            password: True
+
+        MDRoundFlatButton:
+            text: 'Login'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.login()
+        
+        MDRoundFlatButton:
+            text: 'Clear'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.clear()
+        
+        MDRoundFlatButton:
+            text: 'Back'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.manager.current = 'home_screen'
+
+<RegisterScreen>:
+    name: "register_screen"
+    MDCard:
+        size_hint: None, None
+        size: 600, 800
+        pos_hint: { "center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 20
+        spacing: 20
+        orientation: "vertical"
+    
+        MDLabel:
+            id: welcome_label
+            text: "Register"
+            font_size: 80
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+    
+        MDTextFieldRound:
+            id: user
+            hint_text: "username"
+            icon_right: "account"
+            size_hint_x: None
+            width: 400
+            font_size: 32
+            pos_hint: { "center_x": 0.5 }
+
+        MDTextFieldRound:
+            id: email
+            hint_text: "email"
+            icon_right: "mail"
+            size_hint_x: None
+            width: 400
+            font_size: 32
+            pos_hint: { "center_x": 0.5 }
+
+        MDTextFieldRound:
+            id: phone_num
+            hint_text: "phone number"
+            icon_right: "phone"
+            size_hint_x: None
+            width: 400
+            font_size: 32
+            pos_hint: { "center_x": 0.5 }
+
+        MDTextFieldRound:
+            id: password
+            hint_text: "password"
+            icon_right: "eye-off"
+            size_hint_x: None
+            width: 400
+            font_size: 32
+            pos_hint: { "center_x": 0.5 }
+            password: False
+        
+        MDTextFieldRound:
+            id: password_confirm
+            hint_text: "password"
+            icon_right: "eye-off"
+            size_hint_x: None
+            width: 400
+            font_size: 32
+            pos_hint: { "center_x": 0.5 }
+            password: False
+
+        MDRoundFlatButton:
+            text: 'Register'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: print('register button pressed...')
+            on_press: root.register_user()
+        
+        MDRoundFlatButton:
+            text: 'Clear'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.clear()
+        
+        MDRoundFlatButton:
+            text: 'Back'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.manager.current = 'home_screen'
+
+<InfoScreen>:
+    name: "info_screen"
+    MDCard:
+        size_hint: None, None
+        size: 600, 800
+        pos_hint: { "center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 50
+        spacing: 50
+        orientation: "vertical"
+
+        MDIcon:
+            id: app_icon
+            icon: "cat"
+            font_size: 140
+            padding_x: 175
+        
+        MDRoundFlatButton:
+            text: 'Home'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.manager.current = 'home_screen'
