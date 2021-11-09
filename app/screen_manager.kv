@@ -2,6 +2,7 @@ ScreenManager:
     HomeScreen:
     LoginScreen:
     RegisterScreen:
+    RegisterScreenVerification:
     InfoScreen:
 
 <HomeScreen>:
@@ -183,6 +184,7 @@ ScreenManager:
             pos_hint: { "center_x": 0.5 }
             on_press: print('register button pressed...')
             on_press: root.register_user()
+            on_press: root.manager.current = 'register_screen_verification'
         
         MDRoundFlatButton:
             text: 'Clear'
@@ -195,6 +197,26 @@ ScreenManager:
             font_size: 24
             pos_hint: { "center_x": 0.5 }
             on_press: root.manager.current = 'home_screen'
+
+<RegisterScreenVerification>:
+    name: "register_screen_verification"
+    MDCard:
+        size_hint: None, None
+        size: 600, 800
+        pos_hint: { "center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 20
+        spacing: 20
+        orientation: "vertical"
+
+        MDLabel:
+            id: welcome_label
+            text: "Register Verification"
+            font_size: 80
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+
 
 <InfoScreen>:
     name: "info_screen"
