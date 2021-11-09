@@ -27,8 +27,94 @@ class LoginScreen(Screen):
 class RegisterScreen(Screen):
 
     def CheckInput(self):
-        return True
-    
+        #check if all string do not have special characters
+        spec_chars = '[@_!#$%^&*()<>?/.\|}{~:]'
+        ph_num_len = len(self.ids.phone_num.text)
+        user_len = len(self.ids.user.text)
+        email_len = len(self.ids.email.text)
+        pw_len = len(self.ids.password.text)
+
+        if user_len == 0: #check username text not empty
+            print("Error: Username cannot be empty")
+            return False
+        
+        if user_len > 255: #check username text max 255
+            print("Error: Username exceeds max length")
+            return False
+        
+        #check email check proper format, contains email handle, one @, one . one extension max 255
+        if '@' not in self.ids.email.text or '.' not in self.ids.email.text:
+            print("Error: Invalid email format")
+            return False
+        else:
+            if email_len  < 5: #min valid: a@b.c - len 5
+                print("Error: Email too short")
+                return False
+            elif email_len > 255:
+                print("Error: Email too long")
+                return False
+
+            if self.ids.email.text.count('@') != 1 or self.ids.email.text.count('.') != 1:
+                print('Error: Invalid number of \'@\' or \'.\' in email')
+                return False
+            
+            at_i = self.ids.email.text.find('@')
+            period_i = self.ids.email.text.find('.')
+            if at_i == 0:
+                print('Error: No email username')
+                return False
+            elif period_i == at_i +1:
+                print('Error: No email domain name')
+                return False
+            elif period_i == len(self.ids.email.text) -1:
+                print('Error: No email domain')
+                return False
+                
+
+        if ph_num_len < 9: #check phone number 9 digits, possibly 10 for international code (max 20)
+            print("Error: Phone number too short")
+            return False
+
+        if ph_num_len <= 20:
+            if ph_num_len == 10 and self.ids.phone_num.text[0] != '1':
+                print("Error: Invalid country code")
+                return False
+            elif ph_num_len != 9: #invalid phone number
+                print("Error: Invalid phone number length")
+                return False
+        else:
+            print("Error: Phone number exceeds max length")
+            return False
+        
+        for number in self.ids.phone_num.text:
+            if number.isalpha():
+                print("Error: Phone number cannot contain alphabetical characters")
+
+        if pw_len < 8:
+            print("Error: Password must be at least 8 characters long")
+            return False
+        elif pw_len > 255:
+            print("Error: Password must be less than 256 characters long")
+            return False
+
+        if self.ids.password.text != self.ids.password_confirm.text:
+            print("Error: Password does not match confirmation password")
+
+        for spec in spec_chars:
+            if spec in self.ids.user.text:
+                print("Error: Username cannot contain special characters")
+                return False
+            if spec in self.ids.phone_num.text:
+                print("Error: Phone number cannot contain special characters")
+                return False
+            if spec in self.ids.email.text:
+                if spec != '@' and spec != '.':
+                    print('Error: Email cannot contain special characters')
+                    return False
+            if spec in self.ids.password.text:
+                print("Error: Password cannot contain special characters")
+                return False
+
     def CreateUser(self):
 
         # define database connection data
