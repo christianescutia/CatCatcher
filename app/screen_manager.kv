@@ -2,7 +2,7 @@ ScreenManager:
     HomeScreen:
     LoginScreen:
     RegisterScreen:
-    RegisterScreenVerification:
+    UserMainScreen:
     InfoScreen:
 
 <HomeScreen>:
@@ -98,7 +98,10 @@ ScreenManager:
             text: 'Login'
             font_size: 24
             pos_hint: { "center_x": 0.5 }
-            on_press: root.login()
+            on_press:
+                root.login()
+                if welcome_label.text == "test": print("User Found"); root.manager.current = 'home_screen'
+                else: print('test failed')
         
         MDRoundFlatButton:
             text: 'Clear'
@@ -110,6 +113,7 @@ ScreenManager:
             text: 'Back'
             font_size: 24
             pos_hint: { "center_x": 0.5 }
+            
             on_press: root.manager.current = 'home_screen'
 
 <RegisterScreen>:
@@ -184,7 +188,6 @@ ScreenManager:
             pos_hint: { "center_x": 0.5 }
             on_press: print('register button pressed...')
             on_press: root.register_user()
-            on_press: root.manager.current = 'register_screen_verification'
         
         MDRoundFlatButton:
             text: 'Clear'
@@ -197,9 +200,10 @@ ScreenManager:
             font_size: 24
             pos_hint: { "center_x": 0.5 }
             on_press: root.manager.current = 'home_screen'
+            on_press: root.reset()
 
-<RegisterScreenVerification>:
-    name: "register_screen_verification"
+<UserMainScreen>:
+    name: "user_main_screen"
     MDCard:
         size_hint: None, None
         size: 600, 800
@@ -211,7 +215,7 @@ ScreenManager:
 
         MDLabel:
             id: welcome_label
-            text: "Register Verification"
+            text: "User Main Screen"
             font_size: 80
             halign: 'center'
             size_hint_y: None
@@ -234,6 +238,12 @@ ScreenManager:
             icon: "cat"
             font_size: 140
             padding_x: 175
+        
+        MDRoundFlatButton:
+            text: 'Socket Test'
+            font_size: 24
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.socket_test()
         
         MDRoundFlatButton:
             text: 'Home'
