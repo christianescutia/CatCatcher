@@ -9,7 +9,7 @@ ScreenManager:
     name: "home_screen"
     MDCard:
         size_hint: None, None
-        size: 600, 800
+        size: 700, 1000
         pos_hint: { "center_x": 0.5, "center_y": 0.5}
         elevation: 10
         padding: 50
@@ -19,33 +19,33 @@ ScreenManager:
         MDIcon:
             id: app_icon
             icon: "cat"
-            font_size: 140
-            padding_x: 175
+            font_size: 160
+            padding_x: 220
     
         MDLabel:
             id: welcome_label
             text: "Welcome to Cat Catcher"
-            font_size: 80
+            font_size: 100
             halign: 'center'
             size_hint_y: None
             height: self.texture_size[1]
-            padding_y: 20
+            padding_y: 40
 
         MDRoundFlatButton:
             text: 'Login'
-            font_size: 24
+            font_size: 40
             pos_hint: { "center_x": 0.5 }
             on_press: root.manager.current = 'login_screen'
 
         MDRoundFlatButton:
             text: 'Register'
-            font_size: 24
+            font_size: 40
             pos_hint: { "center_x": 0.5 }
             on_press: root.manager.current = 'register_screen'
         
         MDRoundFlatButton:
             text: 'Info'
-            font_size: 24
+            font_size: 40
             pos_hint: { "center_x": 0.5 }
             on_press: root.manager.current = 'info_screen'
 
@@ -53,7 +53,7 @@ ScreenManager:
     name: "login_screen"
     MDCard:
         size_hint: None, None
-        size: 600, 800
+        size: 700, 1000
         pos_hint: { "center_x": 0.5, "center_y": 0.5}
         elevation: 10
         padding: 50
@@ -74,6 +74,14 @@ ScreenManager:
             size_hint_y: None
             height: self.texture_size[1]
             padding_y: 20
+        
+        MDLabel:
+            id: error_label
+            text: "   "
+            font_size: 40
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
     
         MDTextFieldRound:
             id: user
@@ -99,9 +107,8 @@ ScreenManager:
             font_size: 24
             pos_hint: { "center_x": 0.5 }
             on_press:
-                root.login()
-                if welcome_label.text == "test": print("User Found"); root.manager.current = 'home_screen'
-                else: print('test failed')
+                if root.login(): print("Login Success"); root.manager.current = 'user_main_screen'
+                else: print('Login Fail')
         
         MDRoundFlatButton:
             text: 'Clear'
@@ -113,14 +120,14 @@ ScreenManager:
             text: 'Back'
             font_size: 24
             pos_hint: { "center_x": 0.5 }
-            
+            on_press: root.clear()
             on_press: root.manager.current = 'home_screen'
 
 <RegisterScreen>:
     name: "register_screen"
     MDCard:
         size_hint: None, None
-        size: 600, 800
+        size: 700, 1000
         pos_hint: { "center_x": 0.5, "center_y": 0.5}
         elevation: 10
         padding: 20
@@ -134,6 +141,14 @@ ScreenManager:
             halign: 'center'
             size_hint_y: None
             height: self.texture_size[1]
+
+        MDLabel:
+            id: error_label
+            text: "test"
+            font_size: 40
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
     
         MDTextFieldRound:
             id: user
@@ -141,7 +156,7 @@ ScreenManager:
             icon_right: "account"
             size_hint_x: None
             width: 400
-            font_size: 32
+            font_size: 40
             pos_hint: { "center_x": 0.5 }
 
         MDTextFieldRound:
@@ -150,7 +165,7 @@ ScreenManager:
             icon_right: "mail"
             size_hint_x: None
             width: 400
-            font_size: 32
+            font_size: 40
             pos_hint: { "center_x": 0.5 }
 
         MDTextFieldRound:
@@ -159,7 +174,7 @@ ScreenManager:
             icon_right: "phone"
             size_hint_x: None
             width: 400
-            font_size: 32
+            font_size: 40
             pos_hint: { "center_x": 0.5 }
 
         MDTextFieldRound:
@@ -168,7 +183,7 @@ ScreenManager:
             icon_right: "eye-off"
             size_hint_x: None
             width: 400
-            font_size: 32
+            font_size: 40
             pos_hint: { "center_x": 0.5 }
             password: False
         
@@ -178,26 +193,26 @@ ScreenManager:
             icon_right: "eye-off"
             size_hint_x: None
             width: 400
-            font_size: 32
+            font_size: 40
             pos_hint: { "center_x": 0.5 }
             password: False
 
         MDRoundFlatButton:
             text: 'Register'
-            font_size: 24
+            font_size: 40
             pos_hint: { "center_x": 0.5 }
             on_press: print('register button pressed...')
             on_press: root.register_user()
         
         MDRoundFlatButton:
             text: 'Clear'
-            font_size: 24
+            font_size: 40
             pos_hint: { "center_x": 0.5 }
             on_press: root.clear()
         
         MDRoundFlatButton:
             text: 'Back'
-            font_size: 24
+            font_size: 40
             pos_hint: { "center_x": 0.5 }
             on_press: root.manager.current = 'home_screen'
             on_press: root.reset()
@@ -206,27 +221,79 @@ ScreenManager:
     name: "user_main_screen"
     MDCard:
         size_hint: None, None
-        size: 600, 800
+        size: 700, 1000
         pos_hint: { "center_x": 0.5, "center_y": 0.5}
         elevation: 10
         padding: 20
         spacing: 20
         orientation: "vertical"
+        
+        MDList:
+            id: cage_container
 
         MDLabel:
-            id: welcome_label
-            text: "User Main Screen"
-            font_size: 80
+            id: info_label
+            text: "Click Refresh to Show All Registered Cages \n Enter Any Cage Id below and click Submit to ask for notifications or instant report"
+            font_size: 30
             halign: 'center'
             size_hint_y: None
             height: self.texture_size[1]
+        
+        MDTextFieldRound:
+            id: box_noti_on
+            hint_text: "BoxID - notify me"
+            size_hint_x: None
+            width: 400
+            font_size: 40
+            pos_hint: { "center_x": 0.5 }
+
+        MDTextFieldRound:
+            id: box_noti_off
+            hint_text: "BoxID - notify off"
+            size_hint_x: None
+            width: 400
+            font_size: 40
+            pos_hint: { "center_x": 0.5 }
+        
+        MDRoundFlatButton:
+            text: 'Submit'
+            font_size: 40
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.notificationCheck()
+
+        MDTextFieldRound:
+            id: insta_report
+            hint_text: "BoxID - InstaReport"
+            size_hint_x: None
+            width: 400
+            font_size: 40
+            pos_hint: { "center_x": 0.5 }
+        
+        MDRoundFlatButton:
+            text: 'Submit'
+            font_size: 40
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.InstaCheck()
+        
+        MDRoundFlatButton:
+            text: 'Refresh'
+            font_size: 40
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.refresh()
+        
+        MDRoundFlatButton:
+            text: 'Logout'
+            font_size: 40
+            pos_hint: { "center_x": 0.5 }
+            on_press: root.logout()
+            on_press: root.manager.current = 'home_screen'
 
 
 <InfoScreen>:
     name: "info_screen"
     MDCard:
         size_hint: None, None
-        size: 600, 800
+        size: 700, 1000
         pos_hint: { "center_x": 0.5, "center_y": 0.5}
         elevation: 10
         padding: 50
@@ -238,12 +305,6 @@ ScreenManager:
             icon: "cat"
             font_size: 140
             padding_x: 175
-        
-        MDRoundFlatButton:
-            text: 'Socket Test'
-            font_size: 24
-            pos_hint: { "center_x": 0.5 }
-            on_press: root.socket_test()
         
         MDRoundFlatButton:
             text: 'Home'

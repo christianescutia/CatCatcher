@@ -6,17 +6,14 @@
 from kivymd.app import MDApp
 from kivymd.uix.button import MDRectangleFlatButton
 from kivy.lang import Builder
+from kivymd.uix.list import OneLineListItem
 from kivy.uix.screenmanager import ScreenManager, Screen
 
-# import needed to connect to postgress server
-import psycopg2
-import time
+# import needed to connect to SQL server
+import mysql.connector
 
 # import for email messages
 import smtplib
-
-# import for sockets
-import socket
 
 # import for sms messageing
 from twilio.rest import Client
@@ -24,9 +21,14 @@ from twilio.rest import Client
 # Global Values
 gmail_user = 'catcatcher.noreply@gmail.com'
 gmail_password = 'cat_catcher_2021'
-account_sid = 'ACebaf22614c3bf1885d8bb9acf1638ab7'
-auth_token = 'f54342d07240369873eddb11dfab5f25'
-client = Client(account_sid, auth_token)
+account_sid = 'b3eb57f5f4949f'
+auth_token = '6694f41a'
+database = 'heroku_4f15aeb2ea2245b'
+error_msg = ''
+client = Client('ACebaf22614c3bf1885d8bb9acf1638ab7','f54342d07240369873eddb11dfab5f25')
+
+current_user = ''
+registered_cages = 0
 
 class HomeScreen(Screen):
     pass
@@ -35,46 +37,59 @@ class LoginScreen(Screen):
     
     def login(self):
         print('Attempting to Login...')
+        global current_user
+
+        # check if input is empty
+        if len(self.ids.user.text) == 0:
+            print('empty username')
+            self.ids.error_label.text = 'username is empty'
+            return False
+        
+        if len(self.ids.password.text) == 0:
+            print('empty username')
+            self.ids.error_label.text = 'password is empty'
+            return False
 
         # define database connection data
-        conn = psycopg2.connect(
-            host = "ec2-54-90-13-87.compute-1.amazonaws.com",
-            database = "ddg16dt0q9df1t",
-            user = "ofxriywaexambz",
-            password = "15180294c0a4537da6c6cb7f5ecd6931aa138f1e2968d802268b942554828624",
-            port = "5432"
+        mydb = mysql.connector.connect(
+            host='us-cdbr-east-04.cleardb.com',
+            user=account_sid,
+            password=auth_token,
+            database= database
         )
 
         # create cursor
-        c = conn.cursor()
+        mycursor = mydb.cursor()
 
-        # add user to database
-        # SELECT username, pwd from Users WHERE username = 'cheraten';
-        sql_command = "SELECT username, pwd FROM users WHERE username = \'" + (self.ids.user.text) +"\'"
+        sql_command = "SELECT username, pwd FROM users WHERE username = \'" + self.ids.user.text + "\' AND pwd = \'" + self.ids.password.text + "\'"
 
-        given_username = str(self.ids.user.text)
-        given_pwd = str(self.ids.password.text)
+        # check if user and password match is taken
+        mycursor.execute( sql_command )
 
-        username_d = ''
-        password_d = ''
+        isEmpty = 0
 
-        # executeb SQL Command
-        c.execute( sql_command)
-
-        for x in c:
-            username_d = str(x[0])
-            password_d = str(x[1])
-
-        # commit changes
-        conn.commit()
-
+        for x in mycursor:
+            isEmpty +=1
+        
         # close database connection
-        conn.close()
+        mydb.close()
 
-        self.ids.welcome_label.text = 'User Found'
+        if isEmpty == 0:
+            print('user not found')
+            self.ids.error_label.text = 'User Doesn\'t Exist or Password is Incorrect'
+            return False
+        else:
+            print('user found')
+            current_user = self.ids.user.text
+            print('Logging in as user: ' + current_user)
+            return True
+
+        print('Got to End of User Login - Bad Error')
+        return False
 
     def clear(self):
         print('clear data')
+        self.ids.error_label.text = '  '
         self.ids.user.text = ''
         self.ids.password.text = ''
 
@@ -117,6 +132,83 @@ class RegisterScreen(Screen):
             to=user_number
         )
 
+    def UserCheck(self):
+        # define database connection data
+        mydb = mysql.connector.connect(
+            host='us-cdbr-east-04.cleardb.com',
+            user=account_sid,
+            password=auth_token,
+            database= database
+        )
+
+        # create cursor
+        mycursor = mydb.cursor()
+
+        username = self.ids.user.text
+        phone_number = self.ids.phone_num.text
+        email = self.ids.email.text
+
+        # grab data from the database
+        sql_command_username = "SELECT username FROM users"
+        sql_command_email = "SELECT email FROM users"
+        sql_command_phone = "SELECT phone_num FROM users"
+
+        # check if username is taken
+        mycursor.execute(sql_command_username)
+
+        for x in mycursor:
+            #print(x)
+            # check if user matches
+            str_u = str(x)
+            length = len(str_u)
+            sliced = str_u[2:length-3]
+            #print(sliced)
+
+            if sliced == username:
+                print('user already exits')
+                error_msg = 'username taken'
+                mydb.close() # close database connection
+                return False
+        
+        # check if email is taken
+        mycursor.execute( sql_command_email)
+
+        for x in mycursor:
+            #print(x)
+            # check if email matches
+            str_u = str(x)
+            length = len(str_u)
+            sliced = str_u[2:length-3]
+            #print(sliced)
+
+            if sliced == email:
+                print('email already taken')
+                error_msg = 'email taken'
+                mydb.close() # close database connection
+                return False
+        
+        # check if phone is taken
+        mycursor.execute( sql_command_phone)
+
+        for x in mycursor:
+            #print(x)
+            # check if phone_num matches
+            str_u = str(x)
+            length = len(str_u)
+            sliced = str_u[2:length-3]
+            #print(sliced)
+
+            if sliced == phone_number:
+                print('phone number already taken')
+                error_msg = 'phone number taken'
+                mydb.close() # close database connection
+                return False
+
+        # close database connection
+        mydb.close()
+        # Assumes if got here username, email and phonenum are avaiable
+        return True
+
     def CheckInput(self):
         #check if all string do not have special characters
         spec_chars = '[@_!#$%^&*()<>?/.\|}{~:]'
@@ -124,6 +216,8 @@ class RegisterScreen(Screen):
         email_len = len(self.ids.email.text)
         ph_num_len = len(self.ids.phone_num.text)
         pw_len = len(self.ids.password.text)
+        pwc_len = len(self.ids.password_confirm.text)
+        global error_msg
 
         # print out lens of all input
         print('User Input Lengths:')
@@ -131,18 +225,23 @@ class RegisterScreen(Screen):
         print(email_len)
         print(ph_num_len)
         print(pw_len)
+        print(pwc_len)
 
         # check if fields are empty
         if user_len == 0:
             print("Error: Username cannot be empty")
+            error_msg = 'user empty'
             return False
         if email_len == 0:
             print("Error: email cannot be empty")
+            error_msg = 'email empty'
             return False
         if ph_num_len == 0:
             print("Error: phone mum cannot be empty")
+            error_msg = 'phone empty'
             return False
         if pw_len == 0:
+            error_msg = 'password empty'
             print("Error: password cannot be empty")
             return False
         
@@ -159,7 +258,22 @@ class RegisterScreen(Screen):
         if pw_len  > 255:
             print("Error: password cannot be more than 255 characters")
             return False
+
+        # check if passwords match and minimal length
+        if pw_len < 8:
+            error_msg = 'password to short, 8 or more'
+            print("Error: password cannot be less then 8 characters")
+            return False
         
+        if self.ids.password.text != self.ids.password_confirm.text:
+            error_msg = 'passwords don\'t match'
+            print("Error: passwords must match")
+            return False
+
+        
+        # Check if user already exits
+        if self.UserCheck() == False:
+            return False
 
         
         # default response if everything passes
@@ -168,39 +282,38 @@ class RegisterScreen(Screen):
     def CreateUser(self):
 
         # define database connection data
-        conn = psycopg2.connect(
-            host = "ec2-54-90-13-87.compute-1.amazonaws.com",
-            database = "ddg16dt0q9df1t",
-            user = "ofxriywaexambz",
-            password = "15180294c0a4537da6c6cb7f5ecd6931aa138f1e2968d802268b942554828624",
-            port = "5432"
+        mydb = mysql.connector.connect(
+            host='us-cdbr-east-04.cleardb.com',
+            user=account_sid,
+            password=auth_token,
+            database= database
         )
 
         # create cursor
-        c = conn.cursor()
+        mycursor = mydb.cursor()
 
         # add user to database
         sql_command = "INSERT INTO users ( username, email, phone_num, pwd) VALUES ( %s, %s, %s, %s)"
         values = (self.ids.user.text, self.ids.email.text, self.ids.phone_num.text, self.ids.password.text)
 
         # executeb SQL Command
-        c.execute( sql_command, values)
+        mycursor.execute(sql_command, values)
 
         # commit changes
-        conn.commit()
+        mydb.commit()
 
         # close database connection
-        conn.close()
+        mydb.close()
 
         print('user registered...')
-    
+
     def register_user(self):
 
         # check if user input is acceptable
         if self.CheckInput():
             print('user input accepted...')
             self.CreateUser()
-            self.ids.welcome_label.text = 'User Created'
+            self.ids.error_label.text = 'User Created'
 
             # send welcome email and text message
             self.SendWelcomeEmail()
@@ -209,10 +322,11 @@ class RegisterScreen(Screen):
             # clear data at end
             self.clear()
 
-
         else:
+            global error_msg
             print('user input error...')
-            self.ids.welcome_label.text = 'Error: '
+            self.ids.error_label.text = 'Error: ' + str(error_msg)
+            error_msg = ''
     
     def clear(self):
         print('clear data')
@@ -223,40 +337,226 @@ class RegisterScreen(Screen):
         self.ids.password_confirm.text = ''
     
     def reset(self):
-        self.ids.welcome_label.text = 'Register'
+        self.ids.error_label.text = '   '
 
 class UserMainScreen(Screen):
-    pass
+
+    def NotiAdd(self, user_id, box_id):
+        try:
+            print('Attemping to Add to Notification List')
+            mydb = mysql.connector.connect(
+                host='us-cdbr-east-04.cleardb.com',
+                user=account_sid,
+                password=auth_token,
+                database= database
+            )
+
+            # create cursor
+            mycursor = mydb.cursor()
+
+            print('NotiAdd User - ' + str(user_id))
+
+            sql_command = "INSERT INTO notify_list VALUES ( \'"+box_id+"\', \'"+user_id+"\')"
+            mycursor.execute( sql_command )
+
+            # commit changes
+            mydb.commit()
+
+            # close database connection
+            mydb.close()
+            print('success')
+
+        except:
+            print("An exception occurred -  NotiAdd")
+    
+    def NotiSub(self, user_id, box_id):
+        try:
+            print('Attemping to Subtract from Notification List')
+            mydb = mysql.connector.connect(
+                host='us-cdbr-east-04.cleardb.com',
+                user=account_sid,
+                password=auth_token,
+                database= database
+            )
+
+            # create cursor
+            mycursor = mydb.cursor()
+
+            print('NotiAdd User - ' + str(user_id))
+
+            sql_command = "DELETE FROM notify_list WHERE box_id = \'" + box_id + "\' AND username = \'" + user_id + "\'"
+            mycursor.execute( sql_command )
+
+            # commit changes
+            mydb.commit()
+
+            # close database connection
+            mydb.close()
+            print('success')
+        except:
+            print("An exception occurred -  NotiSub")
+
+    def BoxData(self, box_id):
+        # verify if box id is valid
+        # define database connection data
+        mydb = mysql.connector.connect(
+            host='us-cdbr-east-04.cleardb.com',
+            user=account_sid,
+            password=auth_token,
+            database= database
+        )
+
+        # create cursor
+        mycursor = mydb.cursor()
+
+        sql_command = "SELECT * from cages WHERE cage_id = \'" + box_id + "\'"
+
+        # check if user and password match is taken
+        mycursor.execute( sql_command )
+
+        isEmpty = 0
+
+        for x in mycursor:
+            isEmpty +=1
+            print(x)
+
+        print(isEmpty)
+
+        # close database connection
+        mydb.close()
+
+        if isEmpty == 0:
+            print('cages not found - Box Data')
+            return False
+        else:
+            print('cage found - Box Data')
+            return True
+
+    def refresh(self):
+        # check database for registered cages and add to list
+        # define database connection data
+        global registered_cages
+
+        # Refresh any input hint texts
+        self.ids.box_noti_on.hint_text = 'BoxID - notify on'
+        self.ids.box_noti_off.hint_text = 'BoxID - notify off'
+
+        mydb = mysql.connector.connect(
+            host='us-cdbr-east-04.cleardb.com',
+            user=account_sid,
+            password=auth_token,
+            database= database
+        )
+
+        # create cursor
+        mycursor = mydb.cursor()
+
+        sql_command = "SELECT cage_id from cages"
+
+        # check if user and password match is taken
+        mycursor.execute( sql_command)
+
+        # clear previous refresh
+        self.ids.cage_container.clear_widgets()
+
+        for x in mycursor:
+            registered_cages +=1
+            str_u = str(x)
+            length = len(str_u)
+            sliced = str_u[2:length-3]
+            self.ids.cage_container.add_widget(
+                OneLineListItem(text=sliced)
+            )
+
+        if registered_cages == 0:
+            print('cages not found - refresh')
+        else:
+            print('cage found - refresh')
+
+        # close database connection
+        mydb.close()
+
+    def logout(self):
+        current_user = ''
+        global registered_cages
+        registered_cages = 0
+        self.ids.box_noti_on.hint_text = 'BoxID - notify off'
+        print('user logged out and reset main')
+
+    def notificationCheck(self):
+        
+        global current_user
+
+        # check if both are empty
+        if self.ids.box_noti_on.text == '' and self.ids.box_noti_off.text == '':
+            print('both empty ignore')
+        else:
+            # assume one is not empty
+            print('data found')
+
+            # check first one
+            if self.ids.box_noti_on.text != '':
+                box_id = self.ids.box_noti_on.text
+                check = self.BoxData(box_id)
+                
+                if check:
+                    # add to notification list
+                    print('Current user - ' + str(current_user))
+                    self.NotiAdd(current_user, box_id)
+                    pass
+                else:
+                    print('No Cage - 1')
+                    self.ids.box_noti_on.hint_text = 'Invalid ID'
+                    self.ids.box_noti_on.text = ''
+            
+
+            # check 2nd one
+            elif self.ids.box_noti_off.text != '':
+                box_id = self.ids.box_noti_off.text
+                check = self.BoxData(box_id)
+                
+                if check:
+                    # add to notification list
+                    self.NotiSub(current_user, box_id)
+                    pass
+                else:
+                    print('No Cage - 2')
+                    self.ids.box_noti_off.hint_text = 'Invalid ID'
+                    self.ids.box_noti_off.text = ''
+
+    def InstaCheck(self):
+        global current_user
+        try:
+            print('Attemping to Add to msg_board List')
+            mydb = mysql.connector.connect(
+                host='us-cdbr-east-04.cleardb.com',
+                user=account_sid,
+                password=auth_token,
+                database= database
+            )
+
+            # create cursor
+            mycursor = mydb.cursor()
+
+            print('InstaCheck User - ' + str(current_user))
+
+            sql_command = "INSERT INTO msg_board VALUES ( \'"+self.ids.insta_report.text+"\', \'"+current_user+"\')"
+            mycursor.execute( sql_command )
+
+            # commit changes
+            mydb.commit()
+
+            # close database connection
+            mydb.close()
+            print('success')
+
+        except:
+            print("An exception occurred -  msg_board")
 
 class InfoScreen(Screen):
     # Screen used to Add info to contact Admin or anything Public Related
     # Left for the Client to make any additions
-
-    def socket_test(self):
-        # Create a socket object
-        s = socket.socket()        
-        
-        # Define the port on which you want to connect
-        port = 55635               
-        
-        conn_attempts = 0
-        while True:
-            try:
-                # connect to the server on local computer
-                s.connect(('127.0.0.1', port))
-                # receive data from the server and decoding to get the string.
-                print (s.recv(1024).decode())
-                # close the connection
-                s.close()
-                break
-            except:
-                print("Connection Error")
-                time.sleep(5)
-                conn_attempts += 1
-                if conn_attempts == 3:
-                    break
-        # end of while loop
-        print('3 attempts failed... try again later')
+    pass
 
 
 # Screen Manager
