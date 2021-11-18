@@ -1,5 +1,0 @@
-host = "ec2-54-90-13-87.compute-1.amazonaws.com",
-database = "ddg16dt0q9df1t",
-user = "ofxriywaexambz",
-password = "15180294c0a4537da6c6cb7f5ecd6931aa138f1e2968d802268b942554828624",
-port = "5432"
