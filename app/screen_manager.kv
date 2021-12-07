@@ -66,8 +66,8 @@ ScreenManager:
         MDIcon:
             id: app_icon
             icon: "cat"
-            font_size: 140
-            padding_x: 175
+            font_size: 160
+            padding_x: 220
     
         MDLabel:
             id: welcome_label
@@ -440,8 +440,40 @@ ScreenManager:
         MDIcon:
             id: app_icon
             icon: "cat"
-            font_size: 140
-            padding_x: 175
+            font_size: 160
+            padding_x: 220
+        
+        MDLabel:
+            id: mission_info
+            text: "Mission Info"
+            font_size: 50
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        MDLabel:
+            id: admin_info_desc
+            text: "The Cat Catcher is a simple device that can be used to humanely capture pets in disaster zones."
+            font_size: 40
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+        
+        MDLabel:
+            id: admin_info
+            text: "Admin Contact Info"
+            font_size: 50
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        MDLabel:
+            id: admin_info_desc
+            text: "AdminTest@email.com"
+            font_size: 40
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
         
         MDRoundFlatButton:
             text: 'Home'
