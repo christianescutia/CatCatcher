@@ -19,6 +19,7 @@ import smtplib
 from twilio.rest import Client
 
 # Global Values
+# Items needed to send SMS and Email to users as needed
 gmail_user = 'catcatcher.noreply@gmail.com'
 gmail_password = 'cat_catcher_2021'
 account_sid = 'b3eb57f5f4949f'
@@ -29,12 +30,15 @@ client = Client('ACebaf22614c3bf1885d8bb9acf1638ab7','f54342d07240369873eddb11df
 
 current_user = ''
 registered_cages = 0
+current_cage = ''
 
 class HomeScreen(Screen):
+    # Screen for home screen - this is meant to stay empty unless need to add additonal functionality at runtime
     pass
 
 class LoginScreen(Screen):
-    
+    # Screen used to allow user to login to gain access to backend functions
+
     def login(self):
         print('Attempting to Login...')
         global current_user
@@ -94,6 +98,8 @@ class LoginScreen(Screen):
         self.ids.password.text = ''
 
 class RegisterScreen(Screen):
+    # Screen used to register user, function below check user input and register the user to the database
+
 
     def SendWelcomeEmail(self):
         gmail_user = 'catcatcher.noreply@gmail.com'
@@ -340,65 +346,22 @@ class RegisterScreen(Screen):
         self.ids.error_label.text = '   '
 
 class UserMainScreen(Screen):
+    # Screen used to allow user to query active boxes, delete user account or logout
 
-    def NotiAdd(self, user_id, box_id):
-        try:
-            print('Attemping to Add to Notification List')
-            mydb = mysql.connector.connect(
-                host='us-cdbr-east-04.cleardb.com',
-                user=account_sid,
-                password=auth_token,
-                database= database
-            )
+    def test(self):
+        print('Testing')
+        pass
 
-            # create cursor
-            mycursor = mydb.cursor()
-
-            print('NotiAdd User - ' + str(user_id))
-
-            sql_command = "INSERT INTO notify_list VALUES ( \'"+box_id+"\', \'"+user_id+"\')"
-            mycursor.execute( sql_command )
-
-            # commit changes
-            mydb.commit()
-
-            # close database connection
-            mydb.close()
-            print('success')
-
-        except:
-            print("An exception occurred -  NotiAdd")
+    def logout(self):
+        current_user = ''
+        global registered_cages
+        registered_cages = 0
+        print('user logged out and reset main')
     
-    def NotiSub(self, user_id, box_id):
-        try:
-            print('Attemping to Subtract from Notification List')
-            mydb = mysql.connector.connect(
-                host='us-cdbr-east-04.cleardb.com',
-                user=account_sid,
-                password=auth_token,
-                database= database
-            )
-
-            # create cursor
-            mycursor = mydb.cursor()
-
-            print('NotiAdd User - ' + str(user_id))
-
-            sql_command = "DELETE FROM notify_list WHERE box_id = \'" + box_id + "\' AND username = \'" + user_id + "\'"
-            mycursor.execute( sql_command )
-
-            # commit changes
-            mydb.commit()
-
-            # close database connection
-            mydb.close()
-            print('success')
-        except:
-            print("An exception occurred -  NotiSub")
-
-    def BoxData(self, box_id):
-        # verify if box id is valid
-        # define database connection data
+    def refresh(self):
+        global registered_cages
+        global current_user
+        cageList = []
         mydb = mysql.connector.connect(
             host='us-cdbr-east-04.cleardb.com',
             user=account_sid,
@@ -409,51 +372,22 @@ class UserMainScreen(Screen):
         # create cursor
         mycursor = mydb.cursor()
 
-        sql_command = "SELECT * from cages WHERE cage_id = \'" + box_id + "\'"
-
-        # check if user and password match is taken
-        mycursor.execute( sql_command )
-
-        isEmpty = 0
+        # grab all cages user is registered for
+        sql_command = "SELECT box_id FROM notify_list WHERE username =\'" +current_user+ "\'"
+        mycursor.execute( sql_command)
 
         for x in mycursor:
-            isEmpty +=1
+            str_u = str(x)
+            length = len(str_u)
+            sliced = str_u[2:length-3]
+            cageList.append(sliced)
+        
+        print("List Made")
+        for x in cageList:
             print(x)
 
-        print(isEmpty)
-
-        # close database connection
-        mydb.close()
-
-        if isEmpty == 0:
-            print('cages not found - Box Data')
-            return False
-        else:
-            print('cage found - Box Data')
-            return True
-
-    def refresh(self):
-        # check database for registered cages and add to list
-        # define database connection data
-        global registered_cages
-
-        # Refresh any input hint texts
-        self.ids.box_noti_on.hint_text = 'BoxID - notify on'
-        self.ids.box_noti_off.hint_text = 'BoxID - notify off'
-
-        mydb = mysql.connector.connect(
-            host='us-cdbr-east-04.cleardb.com',
-            user=account_sid,
-            password=auth_token,
-            database= database
-        )
-
-        # create cursor
-        mycursor = mydb.cursor()
-
+        # grab all cage ID's
         sql_command = "SELECT cage_id from cages"
-
-        # check if user and password match is taken
         mycursor.execute( sql_command)
 
         # clear previous refresh
@@ -464,9 +398,21 @@ class UserMainScreen(Screen):
             str_u = str(x)
             length = len(str_u)
             sliced = str_u[2:length-3]
-            self.ids.cage_container.add_widget(
-                OneLineListItem(text=sliced)
-            )
+            cage_found = False
+            for y in cageList:
+                if y == sliced:
+                    cage_found = True
+                    print('Cage Matched!')
+                    break
+            
+            if cage_found:
+                self.ids.cage_container.add_widget(
+                    OneLineListItem(text=sliced + " - Notifications On")
+                )
+            else:
+                self.ids.cage_container.add_widget(
+                    OneLineListItem(text=sliced)
+                )
 
         if registered_cages == 0:
             print('cages not found - refresh')
@@ -476,58 +422,107 @@ class UserMainScreen(Screen):
         # close database connection
         mydb.close()
 
-    def logout(self):
-        current_user = ''
-        global registered_cages
-        registered_cages = 0
-        self.ids.box_noti_on.hint_text = 'BoxID - notify off'
-        print('user logged out and reset main')
-
-    def notificationCheck(self):
-        
+class UserInfoScreen(Screen):
+    
+    def delete_user(self):
+        print('delete user')
         global current_user
+        # define database connection data
+        mydb = mysql.connector.connect(
+            host='us-cdbr-east-04.cleardb.com',
+            user=account_sid,
+            password=auth_token,
+            database= database
+        )
 
-        # check if both are empty
-        if self.ids.box_noti_on.text == '' and self.ids.box_noti_off.text == '':
-            print('both empty ignore')
-        else:
-            # assume one is not empty
-            print('data found')
+        # create cursor
+        mycursor = mydb.cursor()
 
-            # check first one
-            if self.ids.box_noti_on.text != '':
-                box_id = self.ids.box_noti_on.text
-                check = self.BoxData(box_id)
-                
-                if check:
-                    # add to notification list
-                    print('Current user - ' + str(current_user))
-                    self.NotiAdd(current_user, box_id)
-                    pass
-                else:
-                    print('No Cage - 1')
-                    self.ids.box_noti_on.hint_text = 'Invalid ID'
-                    self.ids.box_noti_on.text = ''
-            
+        # add user to database
+        sql_command = "DELETE FROM users WHERE username = \'"+current_user+"\'"
 
-            # check 2nd one
-            elif self.ids.box_noti_off.text != '':
-                box_id = self.ids.box_noti_off.text
-                check = self.BoxData(box_id)
-                
-                if check:
-                    # add to notification list
-                    self.NotiSub(current_user, box_id)
-                    pass
-                else:
-                    print('No Cage - 2')
-                    self.ids.box_noti_off.hint_text = 'Invalid ID'
-                    self.ids.box_noti_off.text = ''
+        # executeb SQL Command
+        mycursor.execute(sql_command)
 
-    def InstaCheck(self):
-        global current_user
+        # commit changes
+        mydb.commit()
+
+        # close database connection
+        mydb.close()
+
+        print('user deleted...')
+    pass
+
+class UserDeleteConfirmation(Screen):
+    pass
+
+class NotificationsScreen(Screen):
+
+    def NotifyToggle(self):
+        print('User Toggle for Cage: ' + self.ids.box_id_1.text)
+
+        # define database connection data
+        mydb = mysql.connector.connect(
+            host='us-cdbr-east-04.cleardb.com',
+            user=account_sid,
+            password=auth_token,
+            database= database
+        )
+
         try:
-            print('Attemping to Add to msg_board List')
+            global current_user
+            matchFound = False
+            # Attempt to find if Notify exists, if True then Delete, else Create
+
+            # create cursor
+            mycursor = mydb.cursor()
+
+            # add user to database
+            sql_command = "SELECT * FROM notify_list WHERE username = \'"+current_user+"\' AND box_id = \'"+self.ids.box_id_1.text+"\'"
+
+            # executeb SQL Command
+            mycursor.execute(sql_command)
+
+            for x in mycursor:
+                matchFound = True
+            
+            print('Checking After Match Found')
+            
+            if matchFound:
+                # delete from database notify list
+                sql_command = "DELETE FROM notify_list WHERE username = \'"+current_user+"\' AND box_id = \'"+self.ids.box_id_1.text+"\'"
+
+                # executeb SQL Command
+                mycursor.execute(sql_command)
+
+                # commit changes
+                mydb.commit()
+            else:
+                # Add to Notify List
+                sql_command = "INSERT INTO notify_list ( box_id, username) VALUES ( %s, %s)"
+                values = (self.ids.box_id_1.text, current_user)
+
+                # executeb SQL Command
+                mycursor.execute(sql_command, values)
+
+                # commit changes
+                mydb.commit()
+
+        except:
+            print("An exception occurred")
+            self.ids.msg_label.text = 'Cage Not Found'
+
+        self.ids.box_id_1.text = ''
+        # close database connection
+        mydb.close()
+    
+    def InstaReport(self):
+        print('Insta Report')
+
+        try:
+            matchFound = False
+
+             # define database connection data
             mydb = mysql.connector.connect(
                 host='us-cdbr-east-04.cleardb.com',
                 user=account_sid,
@@ -538,20 +533,29 @@ class UserMainScreen(Screen):
             # create cursor
             mycursor = mydb.cursor()
 
-            print('InstaCheck User - ' + str(current_user))
+            # add user to database
+            sql_command = "SELECT * FROM cages WHERE cage_id = \'"+self.ids.box_id_2.text+"\'"
 
-            sql_command = "INSERT INTO msg_board VALUES ( \'"+self.ids.insta_report.text+"\', \'"+current_user+"\')"
-            mycursor.execute( sql_command )
+            # executeb SQL Command
+            mycursor.execute(sql_command)
 
-            # commit changes
-            mydb.commit()
-
-            # close database connection
-            mydb.close()
-            print('success')
-
+            for x in mycursor:
+                matchFound = True
+            
+            if matchFound:
+                # if true cage exits and send request else deny
+                sql_command = "INSERT INTO msg_board ( box_id, username) VALUES ( %s, %s)"
+                values = (self.ids.box_id_2.text, current_user)
+                # executeb SQL Command
+                mycursor.execute(sql_command,values)
+                # commit changes
+                mydb.commit()
+            else:
+                print('Cage Doesn\'t exists so notify user')
         except:
-            print("An exception occurred -  msg_board")
+            print("An exception occurred")
+
+        self.ids.box_id_2.text = ''
 
 class InfoScreen(Screen):
     # Screen used to Add info to contact Admin or anything Public Related
@@ -559,15 +563,19 @@ class InfoScreen(Screen):
     pass
 
 
-# Screen Manager
+# Screen Manager - used to register screens to allow for transition between them all
 sm = ScreenManager()
 sm.add_widget( HomeScreen ( name = 'home_screen' ) )
 sm.add_widget( LoginScreen ( name = 'login_screen' ) )
 sm.add_widget( RegisterScreen ( name = 'register_screen' ) )
 sm.add_widget( UserMainScreen ( name = 'user_main_screen' ) )
+sm.add_widget( UserInfoScreen ( name = 'user_info_screen' ) )
+sm.add_widget( UserDeleteConfirmation ( name = 'user_delete_confirmation_screen' ) )
+sm.add_widget( NotificationsScreen ( name = 'notifications_screen') )
 sm.add_widget( InfoScreen ( name = 'info_screen' ) )
 
 
+# Main run script for the app loads from screen_manager file to determine how app looks.
 class CatCatcherApp(MDApp):
     
     def build(self):

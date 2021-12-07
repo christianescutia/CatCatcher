@@ -3,6 +3,9 @@ ScreenManager:
     LoginScreen:
     RegisterScreen:
     UserMainScreen:
+    UserInfoScreen:
+    UserDeleteConfirmation:
+    NotificationsScreen:
     InfoScreen:
 
 <HomeScreen>:
@@ -144,7 +147,7 @@ ScreenManager:
 
         MDLabel:
             id: error_label
-            text: "test"
+            text: " "
             font_size: 40
             halign: 'center'
             size_hint_y: None
@@ -227,67 +230,201 @@ ScreenManager:
         padding: 20
         spacing: 20
         orientation: "vertical"
-        
-        MDList:
-            id: cage_container
 
         MDLabel:
-            id: info_label
-            text: "Click Refresh to Show All Registered Cages \n Enter Any Cage Id below and click Submit to ask for notifications or instant report"
-            font_size: 30
+            id: title_label
+            text: "Cages"
+            font_size: 80
             halign: 'center'
             size_hint_y: None
             height: self.texture_size[1]
         
-        MDTextFieldRound:
-            id: box_noti_on
-            hint_text: "BoxID - notify me"
-            size_hint_x: None
-            width: 400
-            font_size: 40
-            pos_hint: { "center_x": 0.5 }
+        MDList:
+            id: cage_container
+        
+        MDBottomNavigation:
+            id: botton_ui_container
 
-        MDTextFieldRound:
-            id: box_noti_off
-            hint_text: "BoxID - notify off"
-            size_hint_x: None
-            width: 400
-            font_size: 40
-            pos_hint: { "center_x": 0.5 }
-        
-        MDRoundFlatButton:
-            text: 'Submit'
-            font_size: 40
-            pos_hint: { "center_x": 0.5 }
-            on_press: root.notificationCheck()
+            MDBottomNavigationItem:
+                id: logout_button
+                icon: 'arrow-left'
+                text: 'Logout'
+                on_tab_press: root.logout()
+                on_tab_press: root.manager.current = 'home_screen'
+            
+            MDBottomNavigationItem:
+                id: refresh_button
+                icon: 'refresh'
+                text: 'Refresh'
+                on_tab_press: root.refresh()
+            
+            MDBottomNavigationItem:
+                id: notification_settings_button
+                icon: 'bell'
+                text: 'Pings'
+                on_tab_press: root.manager.current = 'notifications_screen'
+            
+            MDBottomNavigationItem:
+                id: user_settings_button
+                icon: 'account-cog'
+                text: 'User Settings'
+                on_tab_press: root.manager.current = 'user_info_screen'
 
-        MDTextFieldRound:
-            id: insta_report
-            hint_text: "BoxID - InstaReport"
-            size_hint_x: None
-            width: 400
-            font_size: 40
-            pos_hint: { "center_x": 0.5 }
+
+<UserInfoScreen>:
+    name: "user_info_screen"
+    MDCard:
+        size_hint: None, None
+        size: 700, 1000
+        pos_hint: { "center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 20
+        spacing: 20
+        orientation: "vertical"
+
+        MDLabel:
+            id: title_label
+            text: "User Settings"
+            font_size: 80
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
         
         MDRoundFlatButton:
-            text: 'Submit'
+            text: 'Delete Account'
             font_size: 40
             pos_hint: { "center_x": 0.5 }
-            on_press: root.InstaCheck()
+            on_press: root.delete_user()
+            on_press: root.manager.current = 'user_delete_confirmation_screen'
+        
+        MDBottomNavigation:
+            id: button_ui_container
+
+            MDBottomNavigationItem:
+                id: back_button
+                icon: 'arrow-left'
+                text: 'Main'
+                on_tab_press: root.manager.current = 'user_main_screen'
+            
+            MDBottomNavigationItem:
+                id: refresh_button
+                icon: 'content-save'
+                text: 'Save Settings'
+                #on_tab_press: root.refresh()
+
+<UserDeleteConfirmation>:
+    name: "user_delete_confirmation_screen"
+    MDCard:
+        size_hint: None, None
+        size: 700, 1000
+        pos_hint: { "center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 50
+        spacing: 50
+        orientation: "vertical"
+
+        MDIcon:
+            id: app_icon
+            icon: "cat"
+            font_size: 140
+            padding_x: 175
+        
+        MDLabel:
+            id: message_label
+            text: "User Account Successfully Deleted"
+            font_size: 80
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+
         
         MDRoundFlatButton:
-            text: 'Refresh'
-            font_size: 40
+            text: 'Home'
+            font_size: 24
             pos_hint: { "center_x": 0.5 }
-            on_press: root.refresh()
-        
-        MDRoundFlatButton:
-            text: 'Logout'
-            font_size: 40
-            pos_hint: { "center_x": 0.5 }
-            on_press: root.logout()
             on_press: root.manager.current = 'home_screen'
 
+<NotificationsScreen>:
+    name: "notifications_screen"
+    MDCard:
+        size_hint: None, None
+        size: 700, 1000
+        pos_hint: { "center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 50
+        orientation: "vertical"
+
+        MDLabel:
+            id: title_label
+            text: "Notification Toggle"
+            font_size: 50
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        MDLabel:
+            id: msg_label
+            font_size: 20
+            text: " "
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+        
+        MDLabel:
+            id: box_label
+            text: "Enter Box ID You Wish to Toggle"
+            font_size: 30
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+    
+        MDTextFieldRound:
+            id: box_id_1
+            hint_text: "Box ID"
+            size_hint_x: None
+            width: 400
+            font_size: 40
+            pos_hint: { "center_x": 0.5 }
+        
+        MDRoundFlatButton:
+            text: 'Toggle'
+            font_size: 40
+            pos_hint: { "center_x": 0.5 }
+            on_press: print('Toggle button pressed...')
+            on_press: root.NotifyToggle()
+
+        MDLabel:
+            id: box_label
+            text: "Enter Box ID You Wish For Instant FeedBack"
+            font_size: 30
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+    
+        MDTextFieldRound:
+            id: box_id_2
+            hint_text: "Box ID"
+            size_hint_x: None
+            width: 400
+            font_size: 40
+            pos_hint: { "center_x": 0.5 }
+        
+        MDRoundFlatButton:
+            text: 'Send Request'
+            font_size: 40
+            pos_hint: { "center_x": 0.5 }
+            on_press: print('Request button pressed...')
+            on_press: root.InstaReport()
+
+        MDBottomNavigation:
+            id: botton_ui_container
+
+            MDBottomNavigationItem:
+                id: logout_button
+                icon: 'arrow-left'
+                text: 'Back'
+                on_tab_press: root.manager.current = 'user_main_screen'
 
 <InfoScreen>:
     name: "info_screen"
