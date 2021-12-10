@@ -10,29 +10,26 @@ ScreenManager:
 
 <HomeScreen>:
     name: "home_screen"
-    MDCard:
-        size_hint: None, None
-        size: 700, 1000
-        pos_hint: { "center_x": 0.5, "center_y": 0.5}
-        elevation: 10
-        padding: 50
-        spacing: 50
-        orientation: "vertical"
+    MDBoxLayout:
+        orientation: 'vertical'
+        pos_hint: {'center_x': .5}
+        spacing: "20dp"
+        padding: "34dp"
 
         MDIcon:
             id: app_icon
             icon: "cat"
+            halign: 'center'
+            pos_hint: { "center_x": 0.5 }
             font_size: 160
-            padding_x: 220
+
     
         MDLabel:
             id: welcome_label
             text: "Welcome to Cat Catcher"
             font_size: 100
             halign: 'center'
-            size_hint_y: None
             height: self.texture_size[1]
-            padding_y: 40
 
         MDRoundFlatButton:
             text: 'Login'
@@ -54,20 +51,18 @@ ScreenManager:
 
 <LoginScreen>:
     name: "login_screen"
-    MDCard:
-        size_hint: None, None
-        size: 700, 1000
-        pos_hint: { "center_x": 0.5, "center_y": 0.5}
-        elevation: 10
-        padding: 50
-        spacing: 30
-        orientation: "vertical"
+    MDBoxLayout:
+        orientation: 'vertical'
+        pos_hint: {'center_x': .5}
+        spacing: "20dp"
+        padding: "34dp"
 
         MDIcon:
             id: app_icon
             icon: "cat"
+            halign: 'center'
+            pos_hint: { "center_x": 0.5 }
             font_size: 160
-            padding_x: 220
     
         MDLabel:
             id: welcome_label
@@ -128,14 +123,11 @@ ScreenManager:
 
 <RegisterScreen>:
     name: "register_screen"
-    MDCard:
-        size_hint: None, None
-        size: 700, 1000
-        pos_hint: { "center_x": 0.5, "center_y": 0.5}
-        elevation: 10
-        padding: 20
-        spacing: 20
-        orientation: "vertical"
+    MDBoxLayout:
+        orientation: 'vertical'
+        pos_hint: {'center_x': .5}
+        spacing: "20dp"
+        padding: "34dp"
     
         MDLabel:
             id: welcome_label
@@ -222,14 +214,11 @@ ScreenManager:
 
 <UserMainScreen>:
     name: "user_main_screen"
-    MDCard:
-        size_hint: None, None
-        size: 700, 1000
-        pos_hint: { "center_x": 0.5, "center_y": 0.5}
-        elevation: 10
-        padding: 20
-        spacing: 20
-        orientation: "vertical"
+    MDBoxLayout:
+        orientation: 'vertical'
+        pos_hint: {'center_x': .5}
+        spacing: "20dp"
+        padding: "34dp"
 
         MDLabel:
             id: title_label
@@ -273,14 +262,11 @@ ScreenManager:
 
 <UserInfoScreen>:
     name: "user_info_screen"
-    MDCard:
-        size_hint: None, None
-        size: 700, 1000
-        pos_hint: { "center_x": 0.5, "center_y": 0.5}
-        elevation: 10
-        padding: 20
-        spacing: 20
-        orientation: "vertical"
+    MDBoxLayout:
+        orientation: 'vertical'
+        pos_hint: {'center_x': .5}
+        spacing: "20dp"
+        padding: "34dp"
 
         MDLabel:
             id: title_label
@@ -314,20 +300,18 @@ ScreenManager:
 
 <UserDeleteConfirmation>:
     name: "user_delete_confirmation_screen"
-    MDCard:
-        size_hint: None, None
-        size: 700, 1000
-        pos_hint: { "center_x": 0.5, "center_y": 0.5}
-        elevation: 10
-        padding: 50
-        spacing: 50
-        orientation: "vertical"
+    MDBoxLayout:
+        orientation: 'vertical'
+        pos_hint: {'center_x': .5}
+        spacing: "20dp"
+        padding: "34dp"
 
         MDIcon:
             id: app_icon
             icon: "cat"
-            font_size: 140
-            padding_x: 175
+            halign: 'center'
+            pos_hint: { "center_x": 0.5 }
+            font_size: 160
         
         MDLabel:
             id: message_label
@@ -346,14 +330,11 @@ ScreenManager:
 
 <NotificationsScreen>:
     name: "notifications_screen"
-    MDCard:
-        size_hint: None, None
-        size: 700, 1000
-        pos_hint: { "center_x": 0.5, "center_y": 0.5}
-        elevation: 10
-        padding: 25
-        spacing: 50
-        orientation: "vertical"
+    MDBoxLayout:
+        orientation: 'vertical'
+        pos_hint: {'center_x': .5}
+        spacing: "20dp"
+        padding: "34dp"
 
         MDLabel:
             id: title_label
@@ -428,20 +409,18 @@ ScreenManager:
 
 <InfoScreen>:
     name: "info_screen"
-    MDCard:
-        size_hint: None, None
-        size: 700, 1000
-        pos_hint: { "center_x": 0.5, "center_y": 0.5}
-        elevation: 10
-        padding: 50
-        spacing: 50
-        orientation: "vertical"
+    MDBoxLayout:
+        orientation: 'vertical'
+        pos_hint: {'center_x': .5}
+        spacing: "20dp"
+        padding: "34dp"
 
         MDIcon:
             id: app_icon
             icon: "cat"
             font_size: 160
-            padding_x: 220
+            halign: 'center'
+            pos_hint: { "center_x": 0.5 }
         
         MDLabel:
             id: mission_info
