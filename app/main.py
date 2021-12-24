@@ -59,7 +59,7 @@ class LoginScreen(Screen):
 
         # define database connection data
         mydb = mysql.connector.connect(
-            host='us-cdbr-east-04.cleardb.com',
+            host='',
             user=account_sid,
             password=auth_token,
             database= database
@@ -105,8 +105,8 @@ class RegisterScreen(Screen):
 
 
     def SendWelcomeEmail(self):
-        gmail_user = 'catcatcher.noreply@gmail.com'
-        gmail_password = 'cat_catcher_2021'
+        gmail_user = ''
+        gmail_password = ''
 
         sent_from = gmail_user
         to = [self.ids.email.text]
@@ -137,14 +137,14 @@ class RegisterScreen(Screen):
         user_number = "+1" + self.ids.phone_num.text
         message = client.messages.create(
             body='Welcome '+ self.ids.user.text + ' to the Cat Catcher App',
-            from_='+18646600650',
+            from_='+',
             to=user_number
         )
 
     def UserCheck(self):
         # define database connection data
         mydb = mysql.connector.connect(
-            host='us-cdbr-east-04.cleardb.com',
+            host='',
             user=account_sid,
             password=auth_token,
             database= database
@@ -292,7 +292,7 @@ class RegisterScreen(Screen):
 
         # define database connection data
         mydb = mysql.connector.connect(
-            host='us-cdbr-east-04.cleardb.com',
+            host='',
             user=account_sid,
             password=auth_token,
             database= database
@@ -366,7 +366,7 @@ class UserMainScreen(Screen):
         global current_user
         cageList = []
         mydb = mysql.connector.connect(
-            host='us-cdbr-east-04.cleardb.com',
+            host='',
             user=account_sid,
             password=auth_token,
             database= database
@@ -432,7 +432,7 @@ class UserInfoScreen(Screen):
         global current_user
         # define database connection data
         mydb = mysql.connector.connect(
-            host='us-cdbr-east-04.cleardb.com',
+            host='',
             user=account_sid,
             password=auth_token,
             database= database
@@ -466,7 +466,7 @@ class NotificationsScreen(Screen):
 
         # define database connection data
         mydb = mysql.connector.connect(
-            host='us-cdbr-east-04.cleardb.com',
+            host='',
             user=account_sid,
             password=auth_token,
             database= database
@@ -527,7 +527,7 @@ class NotificationsScreen(Screen):
 
              # define database connection data
             mydb = mysql.connector.connect(
-                host='us-cdbr-east-04.cleardb.com',
+                host='',
                 user=account_sid,
                 password=auth_token,
                 database= database
