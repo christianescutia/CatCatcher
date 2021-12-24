@@ -15,7 +15,7 @@ import pigpio, time, os
 
 # Global variables
 Cage_ID = "CatCage00" # Set Unique per Cage
-PORT = '65535'
+PORT = ''
 gmail_user = ''
 gmail_password = ''
 account_sid = ''
@@ -128,7 +128,7 @@ def ActivateServoMotor():
 def SendCageInfo():
     # define database connection data
     mydb = mysql.connector.connect(
-        host='us-cdbr-east-04.cleardb.com',
+        host='',
         user='',
         password='',
         database= ''
