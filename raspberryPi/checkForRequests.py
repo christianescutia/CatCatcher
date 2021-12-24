@@ -14,8 +14,8 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 
 # Global variables
-gmail_user = 'catcatcher.noreply@gmail.com'
-gmail_password = 'cat_catcher_2021'
+gmail_user = ''
+gmail_password = ''
 ImgFileName1 = "/home/pi/rightImage.jpg"
 ImgFileName2 = "/home/pi/middleImage.jpg"
 ImgFileName3 = "/home/pi/leftImage.jpg"
@@ -24,9 +24,9 @@ client = Client('ACebaf22614c3bf1885d8bb9acf1638ab7','f54342d07240369873eddb11df
 # Open connection to sql server
 mydb = mysql.connector.connect(
     host='us-cdbr-east-04.cleardb.com',
-    user='b3eb57f5f4949f',
-    password='6694f41a',
-    database= 'heroku_4f15aeb2ea2245b'
+    user='',
+    password='',
+    database= ''
 )
 
 # create cursor
