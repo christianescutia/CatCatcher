@@ -129,9 +129,9 @@ def SendCageInfo():
     # define database connection data
     mydb = mysql.connector.connect(
         host='us-cdbr-east-04.cleardb.com',
-        user='b3eb57f5f4949f',
-        password='6694f41a',
-        database= 'heroku_4f15aeb2ea2245b'
+        user='',
+        password='',
+        database= ''
     )
 
     # create cursor
