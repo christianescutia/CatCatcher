@@ -19,7 +19,7 @@ gmail_password = 'cat_catcher_2021'
 ImgFileName1 = "/home/pi/rightImage.jpg"
 ImgFileName2 = "/home/pi/middleImage.jpg"
 ImgFileName3 = "/home/pi/leftImage.jpg"
-client = Client('ACebaf22614c3bf1885d8bb9acf1638ab7','f54342d07240369873eddb11dfab5f25')
+client = Client('','')
 
 with open(ImgFileName3, 'rb') as f:
     img_data3 = f.read()
@@ -33,9 +33,9 @@ with open(ImgFileName1, 'rb') as f:
 # Connect to sql server
 mydb = mysql.connector.connect(
     host='us-cdbr-east-04.cleardb.com',
-    user='b3eb57f5f4949f',
-    password='6694f41a',
-    database= 'heroku_4f15aeb2ea2245b'
+    user='',
+    password='',
+    database= ''
 )
 
 # Create cursor
@@ -99,7 +99,7 @@ for x in notify_list:
         user_number = "+1" + sliced
         message = client.messages.create(
             body = "Cat Catcher Cage00 was tripped. Check your email for photos.",
-            from_ = "+18646600650",
+            from_ = "",
             to = user_number
         )
 
