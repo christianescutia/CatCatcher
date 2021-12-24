@@ -21,15 +21,15 @@ from twilio.rest import Client
 # Global Values
 # Items needed to send SMS and Email to users as needed
 # needed for email responses
-gmail_user = 'catcatcher.noreply@gmail.com'
-gmail_password = 'cat_catcher_2021'
+gmail_user = ''
+gmail_password = ''
 # needed for postgres access
-account_sid = 'b3eb57f5f4949f'
-auth_token = '6694f41a'
-database = 'heroku_4f15aeb2ea2245b'
+account_sid = ''
+auth_token = ''
+database = ''
 error_msg = ''
 # needed for Twilio SMS access
-client = Client('ACebaf22614c3bf1885d8bb9acf1638ab7','f54342d07240369873eddb11dfab5f25')
+client = Client('','')
 
 current_user = ''
 registered_cages = 0
