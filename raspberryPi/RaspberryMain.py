@@ -16,10 +16,10 @@ import pigpio, time, os
 # Global variables
 Cage_ID = "CatCage00" # Set Unique per Cage
 PORT = '65535'
-gmail_user = 'catcatcher.noreply@gmail.com'
-gmail_password = 'cat_catcher_2021'
-account_sid = 'ACebaf22614c3bf1885d8bb9acf1638ab7'
-auth_token = 'f54342d07240369873eddb11dfab5f25'
+gmail_user = ''
+gmail_password = ''
+account_sid = ''
+auth_token = ''
 client = Client(account_sid, auth_token)
 TrapTriggered = False
 
